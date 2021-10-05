@@ -16,18 +16,17 @@
 <body>
   <h1>Server Programming and Scripting Assessment
   </h1>
-  <div id="map" style="width: 800px;float: left; height:800px;">
+  <div id="map" style="width: 800px;float: left; height:800px; margin-right: 10px;">
 
   </div>
-  <form method='POST' id="form-load-zip"  style="margin-bottom: 30px; border: 1px solid black;">
-    <input type='file' id='file-input' accept='.zip' required>
-    <button type='submit'>Submit</button>
-  </form>
-  <button id="clear-map-button">Clear map</button>
-  <button id="toggle-overlay-button">Toggle overlay
-  </button>
-  <button id="filter-data-button">Filter data
-  </button>
+  <div style="display: flex; flex-direction: column; align-items:flex-start; gap: 10px;">
+    <button id="clear-map-button">Clear map</button>
+    <button id="toggle-overlay-button">Toggle overlay
+    </button>
+    <button id="filter-data-button">Filter data
+    </button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 

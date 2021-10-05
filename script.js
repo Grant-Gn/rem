@@ -34,6 +34,12 @@ async function loadJSON(url) {
   return json
 }
 
+async function loadShapeFileBuffer() {
+  const promise = await fetch('./test-file/Rocque_Place_Polygons.zip')
+  const arrayBuffer = await promise.arrayBuffer()
+  return arrayBuffer
+}
+
 function clearShapeFileFromMap(myMap, shapeFile) {
   if (shapeFile) {
     myMap.removeLayer(shapeFile)
@@ -61,32 +67,25 @@ function showOverlayToMap(myMap) {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const form = document.getElementById('form-load-zip')
-  const input = document.getElementById('file-input')
   const clearMapBtn = document.getElementById('clear-map-button')
   const toggleOverlayBtn = document.getElementById('toggle-overlay-button')
   const filterDataBtn = document.getElementById('filter-data-button')
-  let currentShapeFile = null
   let currentOverlay = null
   const myMap = displayMap()
 
   const jsonData = await Promise.all([
     loadJSON('./data.json'),
-    loadJSON('./gazetteer.json')
+    loadJSON('./gazetteer.json'),
+    loadShapeFileBuffer()
   ])
 
   const streets = jsonData[0].streets
   const gazetteer = jsonData[1]
+  const shapeFileBuffer = jsonData[2]
+  currentShapeFile = new L.Shapefile(shapeFileBuffer)
+  currentShapeFile.addTo(myMap)
 
   const defStreets = searchPlacesinArray(gazetteer, streets)
-
-  form.addEventListener('submit', async function (event) {
-    event.preventDefault()
-    const file = input.files[0]
-    const buffer = await file.arrayBuffer()
-    currentShapeFile = new L.Shapefile(buffer)
-    currentShapeFile.addTo(myMap)
-  })
 
   clearMapBtn.addEventListener('click', function () {
     clearShapeFileFromMap(myMap, currentShapeFile)
