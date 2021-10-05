@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   const filterDataBtn = document.getElementById('filter-data-button')
   let currentShapeFile = null
   let currentOverlay = null
-  let currentLayers = []
   const myMap = displayMap()
 
   const jsonData = await Promise.all([
@@ -81,37 +80,31 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   const defStreets = searchPlacesinArray(gazetteer, streets)
 
-  form.addEventListener('submit', function (event) {
+  form.addEventListener('submit', async function (event) {
     event.preventDefault()
     const file = input.files[0]
-    const fileReader = new FileReader()
-    fileReader.onload = function receiveBinary() {
-      currentShapeFile = new L.Shapefile(fileReader.result)
-      currentShapeFile.addTo(myMap)
-    }
-    fileReader.readAsArrayBuffer(file)
+    const buffer = await file.arrayBuffer()
+    currentShapeFile = new L.Shapefile(buffer)
+    currentShapeFile.addTo(myMap)
   })
 
   clearMapBtn.addEventListener('click', function () {
     clearShapeFileFromMap(myMap, currentShapeFile)
-    currentShapeFile = null
   })
 
   toggleOverlayBtn.addEventListener('click', function () {
-    // if (!currentOverlay) {
-    //   currentOverlay = showOverlayToMap(myMap)
-    // } else {
-    //   clearOverlayFromMap(myMap, currentOverlay)
-    //   currentOverlay = null
-    // }
-    console.log(currentLayers)
-    for (const layer of currentLayers) {
-      myMap.removeLayer(layer)
+    if (!currentOverlay) {
+      currentOverlay = showOverlayToMap(myMap)
+    } else {
+      clearOverlayFromMap(myMap, currentOverlay)
+      currentOverlay = null
     }
   })
 
   filterDataBtn.addEventListener('click', function () {
-    const filteredLayers = currentLayers.filter(function (layer) {
+    clearShapeFileFromMap(myMap, currentShapeFile)
+    const layers = Object.values(currentShapeFile._layers)
+    const filteredLayers = layers.filter(function (layer) {
       return defStreets.some(function (streetInfo) {
         return streetInfo.title.match(layer.feature.properties.standard_1)
       })
@@ -121,17 +114,3 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   })
 })
-
-// var bibu = "Clare Street"
-// function filterData() {
-//     for ( var item=58; item < (Object.keys(shapefile._layers).length);item++ ) {
-//         if (shapefile._layers[item]) {
-//             console.log('b');
-//             for (var idem=0; idem < Object.keys(results).length;idem++) {
-//                 if (shapefile._layers[item].feature.properties.standard_1 == results[idem][2]) {
-//                     shapefile._layers[item].addTo(myMap);
-//                     console.log(bibu);
-//         } }
-//         }
-//     }
-// }
