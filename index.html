@@ -11,31 +11,26 @@
     crossorigin=""></script>
   <script src="https://unpkg.com/shpjs@latest/dist/shp.js"></script>
   <script src="leaflet.shapefile.js"></script>
-  <script src="Try2.js"></script>
 </head>
 
-<body onload="initialise()">
-  <h1 onload="init()">Server Programming and Scripting Assessment
+<body>
+  <h1>Server Programming and Scripting Assessment
   </h1>
   <div id="map" style="width: 800px;float: left; height:800px;">
 
   </div>
-  <form action='#' onsubmit="return false;">
-    <input type='file' id='fileinput'>
-    <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
+  <form method='POST' id="form-load-zip"  style="margin-bottom: 30px; border: 1px solid black;">
+    <input type='file' id='file-input' accept='.zip' required>
+    <button type='submit'>Submit</button>
   </form>
-  <button id="button" onclick="clearJSON()">Hide shapefile
-  </button>
-  <button id="button" onclick="filterData()">Filter
-  </button>
-  <button id="button" onclick="init()">Initialise data
-  </button>
-  <input type="button" onclick="searchPlacesinArray()" value="Display">
-  <p id="demo"></p>
+  <button id="clear-map-button">Clear map</button>
   <button id="button" onclick="clearImage()">Hide map
   </button>
-  <button id="button" onclick="showOverlay()">Show map
+  <button id="toggle-overlay-button">Toggle overlay
   </button>
+  <button id="filter-data-button">Filter data
+  </button>
+  <script src="script.js"></script>
 </body>
 
 </html>
